@@ -3,138 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile Card</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Base styles */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        /* Card container */
-        .profile-card {
-            background-color: #ffffff;
-            width: 320px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .profile-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Header / Banner area */
-        .card-header {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            height: 120px;
-            position: relative;
-        }
-
-        /* Profile Image Placeholder */
-        .profile-image {
-            width: 100px;
-            height: 100px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: -50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #764ba2;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        /* Content area */
-        .card-body {
-            padding: 70px 25px 30px; /* Top padding accounts for image overlap */
-        }
-
-        .student-name {
-            margin: 0;
-            font-size: 1.6rem;
-            color: #2d3748;
-            font-weight: 700;
-        }
-
-        .student-stream {
-            margin: 8px 0 15px;
-            font-size: 0.85rem;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-
-        .student-bio {
-            font-size: 0.95rem;
-            color: #4a5568;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        /* Footer / Action button */
-        .card-footer {
-            padding-bottom: 30px;
-        }
-
-        .contact-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
-        }
-
-        .contact-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.4);
-        }
-    </style>
+    <title>Study Planner & Pomodoro Timer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">StudyApp</div>
+        <ul class="nav-links">
+            <li><a href="#gpa">GPA Calculator</a></li>
+            <li><a href="#timer" class="active">Study Timer</a></li>
+        </ul>
+    </nav>
 
-    <div class="profile-card">
-        <div class="card-header">
-            <div class="profile-image" title="Profile Image Placeholder">
-                SD
-            </div>
-        </div>
-        <div class="card-body">
-            <h2 class="student-name">Seneth Deelaka</h2>
-            <p class="student-stream">Computer Science</p>
-            <p class="student-bio">
-                Aspiring software engineer passionate about web development and solving complex problems with code.
-            </p> <!-- Short bio -->
-            
-            <div class="card-footer">
-                <a href="#" class="contact-btn">View Portfolio</a>
-            </div>
-        </div>
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Upcoming Events</h3>
+            <ul id="events-list">
+                <li>Exam: Math - March 15</li>
+                <li>Assignment: CS - March 20</li>
+                <li>Project: History - March 25</li>
+            </ul>
+        </aside>
+
+        <main class="dashboard">
+            <section id="timer" class="pomodoro-section">
+                <h2>Pomodoro Timer</h2>
+                <div class="timer-display">
+                    <span id="minutes">25</span>:<span id="seconds">00</span>
+                </div>
+                <div class="timer-controls">
+                    <button id="start-btn">Start</button>
+                    <button id="reset-btn">Reset</button>
+                </div>
+            </section>
+
+            <section id="gpa" class="gpa-section" style="display: none;">
+                <h2>GPA Calculator</h2>
+                <p>Coming soon...</p>
+            </section>
+        </main>
     </div>
 
+    <script src="script.js"></script>
 </body>
 </html>

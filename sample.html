@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Toolkit</title>
+    <style>
+        /* CSS Variables for consistent styling */
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f7fa;
+            --accent-color: #34495e;
+            --text-color: #333;
+            --sidebar-bg: #ffffff;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --border-radius: 8px;
+        }
+
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu li {
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-menu li:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-menu li.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+        }
+
+        /* Container for Sidebar and Main Content */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+
+        .event-list {
+            list-style: none;
+        }
+
+        .event-item {
+            padding: 10px;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .event-date {
+            display: block;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none; /* Hidden by default */
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section.active {
+            display: block; /* Show active section */
+        }
+
+        h2.section-title {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        /* GPA Calculator Specifics */
+        .gpa-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .grade-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 40px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-secondary { background: var(--accent-color); color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        
+        .btn:hover { opacity: 0.9; }
+
+        .result-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Study Timer Specifics */
+        .timer-display {
+            font-size: 5rem;
+            text-align: center;
+            margin: 30px 0;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent-color);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <h1>Student Toolkit</h1>
+        <ul class="nav-menu">
+            <li id="nav-gpa" class="active" onclick="showSection('gpa')">GPA Calculator</li>
+            <li id="nav-timer" onclick="showSection('timer')">Study Timer</li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar: Upcoming Events -->
+        <aside class="sidebar">
+            <h2>Upcoming Events</h2>
+            <ul class="event-list">
+                <li class="event-item">
+                    <strong>Assignment Deadline</strong>
+                    <span class="event-date">March 15, 2026</span>
+                </li>
+                <li class="event-item">
+                    <strong>Group Meeting</strong>
+                    <span class="event-date">March 18, 2026</span>
+                </li>
+                <li class="event-item">
+                    <strong>Exam Date</strong>
+                    <span class="event-date">April 02, 2026</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- GPA Calculator Section -->
+            <section id="gpa-section" class="content-section active">
+                <h2 class="section-title">GPA Calculator</h2>
+                <p style="margin-bottom: 15px; color: #666;">Enter your subject names and grades to calculate your semester GPA.</p>
+                
+                <div id="gpa-rows" class="gpa-form">
+                    <div class="grade-row">
+                        <input type="text" placeholder="Subject Name" class="subject-input">
+                        <select class="grade-input">
+                            <option value="4.0">A (4.0)</option>
+                            <option value="3.7">A- (3.7)</option>
+                            <option value="3.3">B+ (3.3)</option>
+                            <option value="3.0">B (3.0)</option>
+                            <option value="2.7">B- (2.7)</option>
+                            <option value="2.3">C+ (2.3)</option>
+                            <option value="2.0">C (2.0)</option>
+                            <option value="0.0">F (0.0)</option>
+                        </select>
+                        <button class="btn btn-danger" onclick="removeRow(this)">×</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn btn-secondary" onclick="addRow()">Add Subject</button>
+                    <button class="btn btn-primary" onclick="calculateGPA()">Calculate GPA</button>
+                </div>
+
+                <div id="gpa-result" class="result-display" style="display: none;">
+                    Your GPA: <span id="gpa-value">0.00</span>
+                </div>
+            </section>
+
+            <!-- Study Timer Section -->
+            <section id="timer-section" class="content-section">
+                <h2 class="section-title">Study Timer</h2>
+                <p style="text-align: center; color: #666;">Stay focused! Use this timer for your study sessions.</p>
+                
+                <div id="timer-display" class="timer-display">25:00</div>
+                
+                <div class="timer-controls">
+                    <button id="start-btn" class="btn btn-primary" onclick="startTimer()">Start</button>
+                    <button id="pause-btn" class="btn btn-secondary" onclick="pauseTimer()">Pause</button>
+                    <button id="reset-btn" class="btn btn-danger" onclick="resetTimer()">Reset</button>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <label for="timer-input">Set Minutes: </label>
+                    <input type="number" id="timer-input" value="25" min="1" max="120" style="width: 60px;">
+                    <button class="btn btn-secondary" onclick="setTimer()">Set</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        /* --- Navigation Logic --- */
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            // Deactivate all nav items
+            document.querySelectorAll('.nav-menu li').forEach(li => li.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId + '-section').classList.add('active');
+            // Activate selected nav item
+            document.getElementById('nav-' + sectionId).classList.add('active');
+        }
+
+        /* --- GPA Calculator Logic --- */
+        function addRow() {
+            const container = document.getElementById('gpa-rows');
+            const row = document.createElement('div');
+            row.className = 'grade-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Subject Name" class="subject-input">
+                <select class="grade-input">
+                    <option value="4.0">A (4.0)</option>
+                    <option value="3.7">A- (3.7)</option>
+                    <option value="3.3">B+ (3.3)</option>
+                    <option value="3.0">B (3.0)</option>
+                    <option value="2.7">B- (2.7)</option>
+                    <option value="2.3">C+ (2.3)</option>
+                    <option value="2.0">C (2.0)</option>
+                    <option value="0.0">F (0.0)</option>
+                </select>
+                <button class="btn btn-danger" onclick="removeRow(this)">×</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeRow(btn) {
+            const rows = document.querySelectorAll('.grade-row');
+            if (rows.length > 1) {
+                btn.parentElement.remove();
+            } else {
+                alert("You need at least one subject to calculate GPA.");
+            }
+        }
+
+        function calculateGPA() {
+            const gradeInputs = document.querySelectorAll('.grade-input');
+            let totalPoints = 0;
+            let count = 0;
+
+            gradeInputs.forEach(input => {
+                totalPoints += parseFloat(input.value);
+                count++;
+            });
+
+            const gpa = totalPoints / count;
+            const resultDiv = document.getElementById('gpa-result');
+            const resultValue = document.getElementById('gpa-value');
+
+            resultValue.textContent = gpa.toFixed(2);
+            resultDiv.style.display = 'block';
+        }
+
+        /* --- Study Timer Logic --- */
+        let timerInterval;
+        let timeLeft = 25 * 60; // Default 25 minutes in seconds
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    alert("Time's up! Take a break.");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            const minutes = parseInt(document.getElementById('timer-input').value) || 25;
+            timeLeft = minutes * 60;
+            updateTimerDisplay();
+        }
+
+        function setTimer() {
+            resetTimer();
+        }
+
+        // Initialize display
+        updateTimerDisplay();
+
+    </script>
+</body>
+</html>
